@@ -33,15 +33,5 @@ class AddObat extends JFrame {
 	private LabelTime waktu;
 	private JTextField stok_field;
 	private JTextField keterangan;
-	AddObat() {
-		setLocation(220, 10);
-		setSize(833, 689);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setTitle("Database Tambah Admin");
-		KomponenVisual();
-		AksiReaksi();
-		setLocationRelativeTo(null);
-        userInterface();
-        setResizable(false);
-	}
+	
 }
