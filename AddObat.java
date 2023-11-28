@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.table.*;
 
-import com.toedter.calendar.JDateChooser;
-
 import java.util.Date;
 import java.awt.event.*;
 import java.sql.*;
