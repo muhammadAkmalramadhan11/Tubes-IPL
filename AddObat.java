@@ -59,3 +59,155 @@ class AddObat extends JFrame {
         userInterface();
         setResizable(false);
 	}
+	
+	void KomponenVisual() {
+		getContentPane().setLayout(null);
+		// logo
+		getContentPane().add(lihatdatabase_jl_logo);
+		lihatdatabase_jl_logo.setBounds(30, 30, 100, 43);
+		// title
+		getContentPane().add(titledatabase);
+		titledatabase.setBounds(71, 11, 440, 79);
+		
+		getContentPane().add(lihatdatabase_jl_bersih);
+		lihatdatabase_jl_bersih.setBounds(394,291,126,20);
+		   
+		// tabel
+		getContentPane().add(pane);
+		pane.setBounds(30, 398, 756, 233);
+
+		// kode obat
+		getContentPane().add(Kode_Obat_label);
+		Kode_Obat_label.setBounds(30, 150, 100, 20);
+		Kode_Obat_label.setFont(new Font("Rockwell", Font.BOLD, 14));
+		Kode_Obat_label.setForeground(Color.WHITE);
+		kode_obat.setEditable(false);
+		
+
+		getContentPane().add(kode_obat);
+		kode_obat.setBounds(150, 145, 250, 30);
+
+		// merk
+		getContentPane().add(nama_obat_label);
+		nama_obat_label.setBounds(30, 190, 100, 20);
+		nama_obat_label.setFont(new Font("Rockwell", Font.BOLD, 14));
+		nama_obat_label.setForeground(Color.WHITE);
+
+		getContentPane().add(name);
+		name.setBounds(150, 185, 250, 30);
+
+		// kategori
+		getContentPane().add(harga_label);
+		harga_label.setBounds(30, 230, 100, 20);
+		harga_label.setFont(new Font("Rockwell", Font.BOLD, 14));
+		harga_label.setForeground(Color.WHITE);
+
+		getContentPane().add(Harga);
+		Harga.setBounds(150, 226, 250, 30);
+		
+		getContentPane().add(lihatdatabase_jl_ubah);
+		lihatdatabase_jl_ubah.setBounds(151, 287, 126, 30);
+
+		// hapus
+		getContentPane().add(lihatdatabase_jl_hapus);
+		lihatdatabase_jl_hapus.setBounds(274, 287, 126, 30);
+
+		// label cari
+		getContentPane().add(lihatdatabase_jl_cari2);
+		lihatdatabase_jl_cari2.setBounds(30, 350, 150, 20);
+		lihatdatabase_jl_cari2.setFont(new Font("Rockwell", Font.BOLD, 14));
+		lihatdatabase_jl_cari2.setForeground(Color.WHITE);
+		// cari text field
+		getContentPane().add(lihatdatabase_jtf_cari);
+		lihatdatabase_jtf_cari.setBounds(114, 349, 130, 25);
+		// tombol cari
+		getContentPane().add(lihatdatabase_jl_cari);
+		lihatdatabase_jl_cari.setBounds(256, 346, 126, 30);
+
+		getContentPane().setBackground(new Color(8, 63, 89));
+		lihatdatabase_jl_tambah.setBounds(30, 287, 126, 30);
+		
+		txtTggl.setBounds(536,226,250,30);
+		getContentPane().add(txtTggl);
+		
+		stock_label = new JLabel("Stok");
+		stock_label.setForeground(Color.WHITE);
+		stock_label.setFont(new Font("Rockwell", Font.BOLD, 14));
+		stock_label.setBounds(416, 150, 100, 20);
+		getContentPane().add(stock_label);
+		
+		stok_field = new JTextField();
+		stok_field.setBounds(536, 145, 250, 30);
+		getContentPane().add(stok_field);
+		
+		ket_label = new JLabel("Keterangan");
+		ket_label.setForeground(Color.WHITE);
+		ket_label.setFont(new Font("Rockwell", Font.BOLD, 14));
+		ket_label.setBounds(416, 190, 100, 20);
+		getContentPane().add(ket_label);
+		
+		keterangan = new JTextField();
+		keterangan.setBounds(536, 185, 250, 30);
+		getContentPane().add(keterangan);
+		
+		Exp = new JLabel("Exp_Date");
+		Exp.setForeground(Color.WHITE);
+		Exp.setFont(new Font("Rockwell", Font.BOLD, 14));
+		Exp.setBounds(416, 230, 100, 20);
+		getContentPane().add(Exp);
+		getContentPane().add(lihatdatabase_jl_tambah);
+		tampilTabel();
+		setVisible(true);
+	}
+	private void userInterface(){
+        waktu = new LabelTime();
+        waktu.setForeground(Color.WHITE);
+        waktu.setSize(200, 100);
+        waktu.setLocation(800, 551);
+        waktu.setFont(new Font("Arial", Font.BOLD, 24));
+        waktu.setHorizontalAlignment(LabelTime.RIGHT);
+        
+        getContentPane().add(waktu);
+		waktu.setBounds(470, 80, 300, 40);		
+		
+    }
+	
+	void AksiReaksi() {
+		lihatdatabase_jl_tambah.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+				try{
+					Class.forName("com.mysql.jdbc.Driver").newInstance();
+					Connection koneksi = DriverManager.getConnection ("jdbc:mysql://localhost/apkapotek","root","");
+					SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+					kode_obat.setText("OBT0"+nomor());
+					String sql = "INSERT INTO db_obat VALUES(?,?,?,?,?,?)";
+					PreparedStatement pr = koneksi.prepareStatement(sql);
+					pr.setString(1, kode_obat.getText());
+					pr.setString(2, name.getText());
+					pr.setString(3, Harga.getText());
+					pr.setString(4, stok_field.getText());
+					pr.setString(5, keterangan.getText());
+					pr.setString(6, date.format(txtTggl.getDate()));
+					pr.executeUpdate();
+					JOptionPane.showMessageDialog(null,"Data berhasil disimpan","Pesan",JOptionPane.INFORMATION_MESSAGE);
+					kode_obat.setText("");
+					name.setText("");
+					Harga.setText("");
+					stok_field.setText("");
+					keterangan.setText("");
+					txtTggl.setDate(null);
+					tampilTabel();
+				}catch(Exception ex){
+					JOptionPane.showMessageDialog(null,"Data gagal disimpan","Pesan",JOptionPane.INFORMATION_MESSAGE);
+					System.out.println(ex);
+				}
+			} 
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				kode_obat.setText("OBT0"+nomor());
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				kode_obat.setText("");
+			}
+		});
