@@ -211,3 +211,139 @@ class AddObat extends JFrame {
 				kode_obat.setText("");
 			}
 		});
+
+		lihatdatabase_jl_hapus.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				String kodeobat = kode_obat.getText();
+				int tanya = JOptionPane.showConfirmDialog(null,
+						"Apakah Anda ingin Menghapus Data dengan kode barang " + kodeobat + " ?", "Konfirmasi",
+						JOptionPane.YES_NO_OPTION);
+				if (tanya == 0) {
+					try {
+						Class.forName("com.mysql.jdbc.Driver").newInstance();
+						Connection koneksi = DriverManager.getConnection("jdbc:mysql://localhost/apkapotek", "root","");
+						String sql = "DELETE FROM db_obat WHERE ID_Obat=?";
+						PreparedStatement pr = koneksi.prepareStatement(sql);
+						pr.setString(1, kodeobat);
+						pr.executeUpdate();
+						pr.close();
+
+						koneksi.close();
+						JOptionPane.showMessageDialog(null, "Data telah dihapus");
+						bersih();
+						tampilTabel();
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(null, "Error :" + ex, "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+		});
+		lihatdatabase_jl_ubah.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				try {
+					Class.forName("com.mysql.jdbc.Driver").newInstance();
+					Connection koneksi = DriverManager.getConnection("jdbc:mysql://localhost/apkapotek", "root", "");
+					String sql = "UPDATE db_obat SET ID_Obat='"+kode_obat.getText()+"',NamaObat='"+name.getText()+"',Harga='"+Harga.getText()+"',Stok='"+stok_field.getText()+"',Keterangan='"+keterangan.getText()+"'WHERE ID_Obat='"+kode_obat.getText()+"'";
+					PreparedStatement pr = koneksi.prepareStatement(sql);
+				
+					pr.executeUpdate();
+					
+					JOptionPane.showMessageDialog(null, "Data berhasil disimpan", "Pesan",JOptionPane.INFORMATION_MESSAGE);
+					bersih();
+					tampilTabel();
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null, "Data gagal disimpan", "Pesan",JOptionPane.INFORMATION_MESSAGE);
+					System.out.println(ex);
+				}
+			}
+		});
+		lihatdatabase_jl_bersih.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e){
+	            bersih();
+	            tampilTabel();
+			}
+	    });
+		lihatdatabase_jl_cari.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getSource() == lihatdatabase_jl_cari) {
+					try {
+						String kb = lihatdatabase_jtf_cari.getText();
+						Class.forName("com.mysql.jdbc.Driver");
+						Connection koneksi = DriverManager.getConnection("jdbc:mysql://localhost/apkapotek", "root","");
+						kode_obat.setText("");
+						Statement st = koneksi.createStatement();
+						String sql = "SELECT * from db_obat WHERE ID_Obat LIKE '" + kb + "'";
+						ResultSet rs = st.executeQuery(sql);
+						if (rs.next()) {
+							kode_obat.setText(rs.getString(1));
+							name.setText(rs.getString(2));
+							Harga.setText(rs.getString(3));
+							stok_field.setText(rs.getString(4));
+							keterangan.setText(rs.getString(5));
+							txtTggl.setDate(rs.getDate(6));
+							tampilTabel();
+						} else {
+							JOptionPane.showMessageDialog(null, "Data yang anda cari tidak ada", "Konfirmasi",
+									JOptionPane.INFORMATION_MESSAGE);
+						}
+						st.close();
+						koneksi.close();
+					} catch (Exception ex) {
+						System.out.println("Error :" + ex);
+					}
+				}
+			}
+		});
+
+	}
+
+	void bersih() {
+		kode_obat.setText("");
+		name.setText("");
+		Harga.setText("");
+		stok_field.setText("");
+		keterangan.setText("");
+		txtTggl.setDate(null);
+		lihatdatabase_jtf_cari.setText("");
+	}
+
+	void tampilTabel() {
+		hapusTabel();
+		try {
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			Connection koneksi = DriverManager.getConnection("jdbc:mysql://localhost/apkapotek", "root", "");
+			Statement state = koneksi.createStatement();
+			String sql = "SELECT * FROM db_obat ORDER BY ID_Obat ASC";
+			ResultSet rs = state.executeQuery(sql);
+
+			while (rs.next()) {
+				Object obj[] = new Object[6];
+				obj[0] = rs.getString(1);
+				obj[1] = rs.getString(2);
+				obj[2] = rs.getString(3);
+				obj[3] = rs.getString(4);
+				obj[4] = rs.getString(5);
+				obj[5] = rs.getString(6);
+				model.addRow(obj);
+			}
+		} catch (Exception ex) {
+			System.out.println(ex);
+		}
+	}
+	
+	int nomor() {
+		int row = model.getRowCount()+1;
+		return row;
+	}
+
+	void hapusTabel() {
+		int row = model.getRowCount();
+		for (int i = 0; i < row; i++) {
+			model.removeRow(0);
+		}
+	}
+
+	public static void main(String args[]) {
+		new AddObat();
+	}
+}
