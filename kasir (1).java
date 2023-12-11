@@ -10,7 +10,7 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.table.DefaultTableModel;
 
-class kasir extends JFrame {
+class BayardiKasir extends JFrame {
 	JLabel keranjang_jl_logo = new JLabel(new ImageIcon(getClass().getResource("/image/logo.png")));
 
 	JLabel titlekasir = new JLabel(new ImageIcon(getClass().getResource("/image/menukasir.png")));
@@ -53,7 +53,7 @@ class kasir extends JFrame {
 	JTable tabel = new JTable(model);
 	JScrollPane pane = new JScrollPane(tabel);
 
-	kasir() {
+	BayardiKasir() {
 		setLocation(350, 50);
 		setSize(650, 650);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -501,6 +501,6 @@ class kasir extends JFrame {
 	}
 
 	public static void main(String args[]) {
-		new kasir();
+		new BayardiKasir();
 	}
 }
